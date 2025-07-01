@@ -3,7 +3,6 @@ const cors = require("cors");
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
-const routes = express.Router();
 
 const connectToDB = require("./database/connect");
 const routes = require("./routes/routes");
