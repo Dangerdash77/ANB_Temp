@@ -23,8 +23,7 @@ app.use(cookieParser());
 // ✅ CORS setup — allows multiple origins (dev & prod)
 const allowedOrigins = [
   "https://www.anbindustries.com",
-  "https://anb-8uzozvlva-manav-kalolas-projects.vercel.app",
-  "http://localhost:3000"
+  // "http://localhost:3000"
 ];
 
 app.use(cors({
