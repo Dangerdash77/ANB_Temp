@@ -130,7 +130,7 @@ const ProductPage = () => {
             <img src={p.image} alt={p.name} />
             <div className="product-details">
               <h3>{p.name}</h3>
-              {["size", "color", "material", "stdPacking", "minQty"].map((key) =>
+              {["size", "color", "material", "stdPacking"].map((key) =>
                 p[key] ? (
                   <p key={key}>
                     <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {p[key]}
