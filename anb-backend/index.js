@@ -51,9 +51,6 @@ const transporter = nodemailer.createTransport({
 // Routes
 app.use("/api", routes);
 
-// ✅ Preflight OPTIONS handler for all routes
-app.options("*", cors());
-
 // 🚀 Quote / Sample / Order Request
 app.post("/api/send-mail", async (req, res) => {
   const { type, name, email, phone, company, address, items } = req.body;
