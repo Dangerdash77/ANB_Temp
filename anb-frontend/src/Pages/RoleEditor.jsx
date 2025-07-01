@@ -7,7 +7,7 @@ const RoleEditor = () => {
   const handleRoleUpdate = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('https://anb-nuis.vercel.app/api/update-role', {
+    const res = await fetch(`${import.meta.env.VITE_SERVER_ORIGIN}/api/update-role`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, newRole }),
