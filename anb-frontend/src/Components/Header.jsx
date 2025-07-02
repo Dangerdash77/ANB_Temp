@@ -49,8 +49,8 @@ const Header = ({ isLoggedIn, role, onLogout }) => {
               {role === 'owner' && (
                 <>
                   <NavLink to="/manage-products" onClick={() => setMenuOpen(false)}>Manage Products</NavLink>
-                  <NavLink to="/view-careers" onClick={() => setMenuOpen(false)}>Career Requests</NavLink>
-                  <NavLink to="/view-contacts" onClick={() => setMenuOpen(false)}>Contact Requests</NavLink>
+                  {/* <NavLink to="/view-careers" onClick={() => setMenuOpen(false)}>Career Requests</NavLink> */}
+                  {/* <NavLink to="/view-contacts" onClick={() => setMenuOpen(false)}>Contact Requests</NavLink> */}
                 </>
               )}
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Pages css/Home.css';
 import slider1 from '../assets/Banner 1.jpg';
 import slider2 from '../assets/Banner 2.jpg';
-import slider3 from '../assets/Banner 3.jpg';
+// import slider3 from '../assets/Banner 3.jpg';
 import trust1 from '../assets/logo.png';
 import trust2 from '../assets/logo.png';
 import trust3 from '../assets/logo.png';
@@ -35,7 +35,8 @@ import img23 from '../assets/product_img/Chain Stopper Button Trans.png';
 import img24 from '../assets/product_img/Chain Stopper Ball.png';
 import img25 from '../assets/product_img/Chain Jointer.png';
 
-const images = [slider1, slider2, slider3];
+// const images = [slider1, slider2, slider3];
+const images = [slider1, slider2];
 
 const productData = [
   {
