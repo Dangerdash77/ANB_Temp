@@ -267,7 +267,8 @@ const localProducts = [
 
 
 const ProductPage = () => {
-  const [products, setProducts] = useState([]);
+  const [localOnlyProducts, setLocalOnlyProducts] = useState([]);
+  const [backendOnlyProducts, setBackendOnlyProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [formType, setFormType] = useState(null);
   const [formData, setFormData] = useState({
@@ -374,11 +375,14 @@ const ProductPage = () => {
         const data = await res.json();
         const backendProducts = data.products || [];
 
+        setLocalOnlyProducts(localProducts);
+        setBackendOnlyProducts(backendProducts);
         // Merge backend and hardcoded products
         setProducts([...localProducts, ...backendProducts]);
       } catch (err) {
-        console.error("❌ Failed to load backend products, using local ones:", err);
-        setProducts(localProducts); // fallback to local only
+        console.error("❌ Failed to load backend products:", err);
+        setLocalOnlyProducts(localProducts); // fallback to only local
+        setBackendOnlyProducts([]); // no backend products if failed
       }
     };
 
@@ -393,26 +397,58 @@ const ProductPage = () => {
         <span className="cart-count">{cart.length}</span>
       </div>
 
-      <div className="product-grid">
-        {products.map((p) => (
-          <div key={p._id} className="product-vertical-card">
-            <img src={p.image} alt={p.name} />
-            <div className="product-details">
-              <h3>{p.name}</h3>
-              {["size", "color", "material", "stdPacking"].map((key) =>
-                p[key] ? (
-                  <p key={key}>
-                    <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {p[key]}
-                  </p>
-                ) : null
-              )}
-              <button onClick={() => toggleCart(p)} className="add-cart">
-                {isInCart(p._id) ? "−" : "+"}
-              </button>
-            </div>
+      {localOnlyProducts.length > 0 && (
+        <>
+          <h2 className="section-title">🔧 Our Standard Products</h2>
+          <div className="product-grid">
+            {localOnlyProducts.map((p) => (
+              <div key={p._id} className="product-vertical-card">
+                <img src={p.image} alt={p.name} />
+                <div className="product-details">
+                  <h3>{p.name}</h3>
+                  {["size", "color", "material", "stdPacking"].map((key) =>
+                    p[key] ? (
+                      <p key={key}>
+                        <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {p[key]}
+                      </p>
+                    ) : null
+                  )}
+                  <button onClick={() => toggleCart(p)} className="add-cart">
+                    {isInCart(p._id) ? "−" : "+"}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
+
+      {backendOnlyProducts.length > 0 && (
+        <>
+          <h2 className="section-title">🚀 Special or Custom Products</h2>
+          <div className="product-grid">
+            {backendOnlyProducts.map((p) => (
+              <div key={p._id} className="product-vertical-card">
+                <img src={p.image} alt={p.name} />
+                <div className="product-details">
+                  <h3>{p.name}</h3>
+                  {["size", "color", "material", "stdPacking"].map((key) =>
+                    p[key] ? (
+                      <p key={key}>
+                        <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {p[key]}
+                      </p>
+                    ) : null
+                  )}
+                  <button onClick={() => toggleCart(p)} className="add-cart">
+                    {isInCart(p._id) ? "−" : "+"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
 
       <div className="cart-panel" ref={cartRef}>
         <h2>Cart Summary</h2>
