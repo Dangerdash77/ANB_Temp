@@ -369,28 +369,33 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
-    // Immediately load local products
-    console.log("⏱ Loading local products...");
-    setLocalOnlyProducts(localProducts);
+    let isMounted = true;
 
-    // Then fetch backend products
+    console.log("✅ Loading hardcoded products...");
+    if (isMounted) setLocalOnlyProducts(localProducts);
+
     const fetchProducts = async () => {
-      console.log("📡 Fetching backend products...");
+      console.log("🌐 Fetching backend products...");
       try {
         const res = await fetch(`${import.meta.env.VITE_SERVER_ORIGIN}/api/products/all`);
         const data = await res.json();
-        const backendProducts = data.products || [];
-        console.log("✅ Backend products loaded:", backendProducts.length);
-        setBackendOnlyProducts(backendProducts);
+        if (isMounted) {
+          const backendProducts = data.products || [];
+          console.log("✅ Backend products loaded:", backendProducts.length);
+          setBackendOnlyProducts(backendProducts);
+        }
       } catch (err) {
-        console.error("❌ Failed to load backend products:", err);
-        setBackendOnlyProducts([]);
+        console.error("❌ Failed to fetch backend products:", err);
+        if (isMounted) setBackendOnlyProducts([]);
       }
     };
 
     fetchProducts();
-  }, []);
 
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="product-page">
