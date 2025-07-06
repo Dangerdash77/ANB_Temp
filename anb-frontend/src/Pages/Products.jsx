@@ -369,20 +369,22 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
+    // Immediately load local products
+    console.log("⏱ Loading local products...");
+    setLocalOnlyProducts(localProducts);
+
+    // Then fetch backend products
     const fetchProducts = async () => {
+      console.log("📡 Fetching backend products...");
       try {
         const res = await fetch(`${import.meta.env.VITE_SERVER_ORIGIN}/api/products/all`);
         const data = await res.json();
         const backendProducts = data.products || [];
-
-        setLocalOnlyProducts(localProducts);
+        console.log("✅ Backend products loaded:", backendProducts.length);
         setBackendOnlyProducts(backendProducts);
-        // Merge backend and hardcoded products
-        setProducts([...localProducts, ...backendProducts]);
       } catch (err) {
         console.error("❌ Failed to load backend products:", err);
-        setLocalOnlyProducts(localProducts); // fallback to only local
-        setBackendOnlyProducts([]); // no backend products if failed
+        setBackendOnlyProducts([]);
       }
     };
 
