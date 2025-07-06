@@ -369,33 +369,25 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
-    let isMounted = true;
-
     console.log("✅ Loading hardcoded products...");
-    if (isMounted) setLocalOnlyProducts(localProducts);
+    setLocalOnlyProducts(localProducts);  // ✅ This now works on hosting too
 
     const fetchProducts = async () => {
       console.log("🌐 Fetching backend products...");
       try {
         const res = await fetch(`${import.meta.env.VITE_SERVER_ORIGIN}/api/products/all`);
         const data = await res.json();
-        if (isMounted) {
-          const backendProducts = data.products || [];
-          console.log("✅ Backend products loaded:", backendProducts.length);
-          setBackendOnlyProducts(backendProducts);
-        }
+        const backendProducts = data.products || [];
+        console.log("✅ Backend products loaded:", backendProducts.length);
+        setBackendOnlyProducts(backendProducts);
       } catch (err) {
         console.error("❌ Failed to fetch backend products:", err);
-        if (isMounted) setBackendOnlyProducts([]);
       }
     };
 
     fetchProducts();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
+
 
   return (
     <div className="product-page">
