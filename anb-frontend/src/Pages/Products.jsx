@@ -266,8 +266,8 @@ const localProducts = [
 ];
 
 const ProductPage = () => {
-  const [localOnlyProducts, setLocalOnlyProducts] = useState([]);
-  const [backendOnlyProducts, setBackendOnlyProducts] = useState([]);
+  // Combine local and backend (dynamic) products in one array
+  const [allProducts, setAllProducts] = useState([]);
   const [loadingBackend, setLoadingBackend] = useState(false);
   const [cart, setCart] = useState([]);
   const [formType, setFormType] = useState(null);
@@ -369,29 +369,38 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
-    console.log("✅ Loading hardcoded products...");
-    setLocalOnlyProducts(localProducts);  // ✅ This now works on hosting too
+    // Show local products immediately on initial render
+    setAllProducts(localProducts);
 
     // Try to get cached backend products
     const cachedBackend = localStorage.getItem("backendProducts");
     if (cachedBackend) {
       try {
-        setBackendOnlyProducts(JSON.parse(cachedBackend));
+        const backendProducts = JSON.parse(cachedBackend);
+        setAllProducts(prev => {
+          const existingIds = new Set(prev.map(p => p._id));
+          const onlyNew = backendProducts.filter(p => !existingIds.has(p._id));
+          return [...prev, ...onlyNew];
+        });
         console.log("✅ Loaded cached backend products");
       } catch (e) {
         console.error("❌ Failed to parse cached backend products", e);
       }
     }
 
+    // Fetch from backend and merge products as soon as they're returned
     const fetchProducts = async () => {
-      console.log("🌐 Fetching backend products...");
       setLoadingBackend(true);
       try {
         const res = await fetch(`${import.meta.env.VITE_SERVER_ORIGIN}/api/products/all`);
         const data = await res.json();
         const backendProducts = data.products || [];
-        console.log("✅ Backend products loaded:", backendProducts.length);
-        setBackendOnlyProducts(backendProducts);
+        setAllProducts(prev => {
+          // Avoid duplicate IDs
+          const existingIds = new Set(prev.map(p => p._id));
+          const onlyNew = backendProducts.filter(p => !existingIds.has(p._id));
+          return [...prev, ...onlyNew];
+        });
         localStorage.setItem("backendProducts", JSON.stringify(backendProducts));
       } catch (err) {
         console.error("❌ Failed to fetch backend products:", err);
@@ -410,60 +419,32 @@ const ProductPage = () => {
         <span className="cart-count">{cart.length}</span>
       </div>
 
-      {localOnlyProducts.length > 0 && (
-        <>
-          <h2 className="section-title">🔧 Our Standard Products</h2>
-          <div className="product-grid">
-            {localOnlyProducts.map((p) => (
-              <div key={p._id} className="product-vertical-card">
-                <img src={p.image} alt={p.name} />
-                <div className="product-details">
-                  <h3>{p.name}</h3>
-                  {["size", "color", "material", "stdPacking"].map((key) =>
-                    p[key] ? (
-                      <p key={key}>
-                        <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {p[key]}
-                      </p>
-                    ) : null
-                  )}
-                  <button onClick={() => toggleCart(p)} className="add-cart">
-                    {isInCart(p._id) ? "−" : "+"}
-                  </button>
-                </div>
-              </div>
-            ))}
+      <h2 className="section-title">🛒 Products</h2>
+      <div className="product-grid">
+        {allProducts.map((p) => (
+          <div key={p._id} className="product-vertical-card">
+            <img src={p.image} alt={p.name} />
+            <div className="product-details">
+              <h3>{p.name}</h3>
+              {["size", "color", "material", "stdPacking"].map((key) =>
+                p[key] ? (
+                  <p key={key}>
+                    <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {p[key]}
+                  </p>
+                ) : null
+              )}
+              <button onClick={() => toggleCart(p)} className="add-cart">
+                {isInCart(p._id) ? "−" : "+"}
+              </button>
+            </div>
           </div>
-        </>
-      )}
-
-      {/* Loading indicator for backend products */}
-      {loadingBackend && <p>Loading special/custom products...</p>}
-
-      {(!loadingBackend && backendOnlyProducts.length > 0) && (
-        <>
-          <h2 className="section-title">🚀 Special or Custom Products</h2>
-          <div className="product-grid">
-            {backendOnlyProducts.map((p) => (
-              <div key={p._id} className="product-vertical-card">
-                <img src={p.image} alt={p.name} />
-                <div className="product-details">
-                  <h3>{p.name}</h3>
-                  {["size", "color", "material", "stdPacking"].map((key) =>
-                    p[key] ? (
-                      <p key={key}>
-                        <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {p[key]}
-                      </p>
-                    ) : null
-                  )}
-                  <button onClick={() => toggleCart(p)} className="add-cart">
-                    {isInCart(p._id) ? "−" : "+"}
-                  </button>
-                </div>
-              </div>
-            ))}
+        ))}
+        {loadingBackend && (
+          <div style={{ gridColumn: "1 / -1", textAlign: "center", margin: "2rem 0" }}>
+            <p>Loading more products...</p>
           </div>
-        </>
-      )}
+        )}
+      </div>
 
       <div className="cart-panel" ref={cartRef}>
         <h2>Cart Summary</h2>
@@ -514,14 +495,12 @@ const ProductPage = () => {
                     Company:
                     <input name="company" value={formData.company} onChange={handleChange} />
                   </label>
-
                   {(formType === "Sample" || formType === "Order") && (
                     <label>
                       Address:
                       <textarea name="address" value={formData.address} onChange={handleChange} required />
                     </label>
                   )}
-
                   <div className="product-summary-scroll">
                     <div className="product-summary">
                       {cart.map((product) => {
@@ -547,7 +526,6 @@ const ProductPage = () => {
                       })}
                     </div>
                   </div>
-
                   <div className="form-actions">
                     <button type="submit" disabled={loading}>
                       Submit
