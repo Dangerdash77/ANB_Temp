@@ -265,10 +265,10 @@ const localProducts = [
   },
 ];
 
-
 const ProductPage = () => {
   const [localOnlyProducts, setLocalOnlyProducts] = useState([]);
   const [backendOnlyProducts, setBackendOnlyProducts] = useState([]);
+  const [loadingBackend, setLoadingBackend] = useState(false);
   const [cart, setCart] = useState([]);
   const [formType, setFormType] = useState(null);
   const [formData, setFormData] = useState({
@@ -293,12 +293,12 @@ const ProductPage = () => {
       isInCart(product._id)
         ? prev.filter((p) => p._id !== product._id)
         : [
-          ...prev,
-          {
-            ...product,
-            quantity: parseInt((product.minQty || "1").replace(/\D/g, "")) || 1,
-          },
-        ]
+            ...prev,
+            {
+              ...product,
+              quantity: parseInt((product.minQty || "1").replace(/\D/g, "")) || 1,
+            },
+          ]
     );
   };
 
@@ -310,9 +310,9 @@ const ProductPage = () => {
       prev.map((item) =>
         item._id === id
           ? {
-            ...item,
-            quantity: Math.max(Number(val), Number(item.minQty || 1)),
-          }
+              ...item,
+              quantity: Math.max(Number(val), Number(item.minQty || 1)),
+            }
           : item
       )
     );
@@ -372,22 +372,36 @@ const ProductPage = () => {
     console.log("✅ Loading hardcoded products...");
     setLocalOnlyProducts(localProducts);  // ✅ This now works on hosting too
 
+    // Try to get cached backend products
+    const cachedBackend = localStorage.getItem("backendProducts");
+    if (cachedBackend) {
+      try {
+        setBackendOnlyProducts(JSON.parse(cachedBackend));
+        console.log("✅ Loaded cached backend products");
+      } catch (e) {
+        console.error("❌ Failed to parse cached backend products", e);
+      }
+    }
+
     const fetchProducts = async () => {
       console.log("🌐 Fetching backend products...");
+      setLoadingBackend(true);
       try {
         const res = await fetch(`${import.meta.env.VITE_SERVER_ORIGIN}/api/products/all`);
         const data = await res.json();
         const backendProducts = data.products || [];
         console.log("✅ Backend products loaded:", backendProducts.length);
         setBackendOnlyProducts(backendProducts);
+        localStorage.setItem("backendProducts", JSON.stringify(backendProducts));
       } catch (err) {
         console.error("❌ Failed to fetch backend products:", err);
+      } finally {
+        setLoadingBackend(false);
       }
     };
 
     fetchProducts();
   }, []);
-
 
   return (
     <div className="product-page">
@@ -422,7 +436,10 @@ const ProductPage = () => {
         </>
       )}
 
-      {backendOnlyProducts.length > 0 && (
+      {/* Loading indicator for backend products */}
+      {loadingBackend && <p>Loading special/custom products...</p>}
+
+      {(!loadingBackend && backendOnlyProducts.length > 0) && (
         <>
           <h2 className="section-title">🚀 Special or Custom Products</h2>
           <div className="product-grid">
@@ -447,7 +464,6 @@ const ProductPage = () => {
           </div>
         </>
       )}
-
 
       <div className="cart-panel" ref={cartRef}>
         <h2>Cart Summary</h2>
