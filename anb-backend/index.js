@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 // ✅ CORS setup — allows multiple origins (dev & prod)
 const allowedOrigins = [
-  "https://www.anbindustries.com",
+  process.env.CLIENT_ORIGIN,
   // "http://localhost:3000"
 ];
 
