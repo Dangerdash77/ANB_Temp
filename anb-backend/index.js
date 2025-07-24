@@ -24,7 +24,7 @@ app.use(cookieParser());
 const allowedOrigins = [
   // process.env.CLIENT_ORIGIN
   "https://www.anbindustries.com",
-  // "http://localhost:5173"
+  "http://localhost:5173"
 ];
 
 app.use(cors({
