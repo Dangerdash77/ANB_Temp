@@ -41,29 +41,21 @@ const Header = ({ isLoggedIn, role, onLogout }) => {
 
       {(menuOpen || !isMobile) && (
         <nav className={`nav-links ${menuOpen ? 'show' : ''}`}>
-          {isLoggedIn ? (
+          {!isLoggedIn ? (
             <>
-              <NavLink to="/company" onClick={() => setMenuOpen(false)}>Company</NavLink>
-              <NavLink to="/profile" onClick={() => setMenuOpen(false)}>Profile</NavLink>
-
-              {role === 'owner' && (
-                <>
-                  <NavLink to="/manage-products" onClick={() => setMenuOpen(false)}>Manage Products</NavLink>
-                  {/* <NavLink to="/view-careers" onClick={() => setMenuOpen(false)}>Career Requests</NavLink> */}
-                  {/* <NavLink to="/view-contacts" onClick={() => setMenuOpen(false)}>Contact Requests</NavLink> */}
-                </>
-              )}
-
-              <button onClick={handleLogoutClick} className="logout-btn">Logout</button>
+              <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
+              <NavLink to="/about-us" onClick={() => setMenuOpen(false)}>About Us</NavLink>
+              <NavLink to="/products" onClick={() => setMenuOpen(false)}>Products</NavLink>
+              <NavLink to="/contact-us" onClick={() => setMenuOpen(false)}>Contact Us</NavLink>
             </>
           ) : (
             <>
-              <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
-              <NavLink to="/products" onClick={() => setMenuOpen(false)}>Products</NavLink>
-              <NavLink to="/contact-us" onClick={() => setMenuOpen(false)}>Contact Us</NavLink>
-              <NavLink to="/careers" onClick={() => setMenuOpen(false)}>Careers</NavLink>
-              <NavLink to="/about-us" onClick={() => setMenuOpen(false)}>About Us</NavLink>
-              <NavLink to="/login" onClick={() => setMenuOpen(false)}>Login</NavLink>
+              <NavLink to="/company" onClick={() => setMenuOpen(false)}>Company</NavLink>
+              <NavLink to="/profile" onClick={() => setMenuOpen(false)}>Profile</NavLink>
+              {role === 'owner' && (
+                <NavLink to="/manage-products" onClick={() => setMenuOpen(false)}>Manage Products</NavLink>
+              )}
+              <button onClick={handleLogoutClick} className="logout-btn">Logout</button>
             </>
           )}
         </nav>
