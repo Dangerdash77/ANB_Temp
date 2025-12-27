@@ -12,112 +12,143 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000;
 
-// MongoDB Connection
+// ==========================
+// MongoDB
+// ==========================
 connectToDB(process.env.MONGO_URI);
 
+// ==========================
 // Middleware
+// ==========================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const allowedOrigins = [
-  "https://www.anbindustries.com",
-  "https://anb-frontend.onrender.com",
-  "http://localhost:5173",
-  "https://anb-temp-frontend.onrender.com",
-];
+// ==========================
+// ✅ INDUSTRY-STANDARD CORS
+// ==========================
+const clientOrigins = process.env.CLIENT_ORIGIN
+  ? process.env.CLIENT_ORIGIN.split(",").map(o => o.trim())
+  : [];
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log("❌ Blocked by CORS:", origin);
-      callback(new Error("CORS blocked"));
+    // Allow server-to-server, Postman, curl
+    if (!origin) return callback(null, true);
+
+    if (clientOrigins.includes(origin)) {
+      return callback(null, true);
     }
+
+    console.warn("❌ CORS blocked origin:", origin);
+    return callback(null, false); // ❗ NEVER throw
   },
   credentials: true,
-}));
+};
 
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
-// Mail transport setup (secure with env vars)
+// ==========================
+// Routes
+// ==========================
+app.use("/api", routes);
+
+// ==========================
+// Mail Transport
+// ==========================
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: process.env.MAIL_USER,       // e.g. anbind2020@gmail.com
-    pass: process.env.MAIL_PASS        // app password stored in .env
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
   },
 });
 
-// Routes
-app.use("/api", routes);
-
-// 🚀 Quote / Sample / Order Request
+// ==========================
+// Quote / Sample / Order
+// ==========================
 app.post("/api/send-mail", async (req, res) => {
-  const { type, name, email, phone, company, address, items } = req.body;
-
-  const itemList = items?.map(item =>
-    `<li>${item.name} (Qty: ${item.quantity})</li>`).join('') || '';
-
-  const addressLine = address ? `<p><strong>Address:</strong> ${address}</p>` : '';
-
-  const mailOptions = {
-    from: process.env.MAIL_USER,
-    to: process.env.MAIL_USER,
-    subject: `New ${type} Request from ${name}`,
-    html: `
-      <h2>${type} Request</h2>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Phone:</strong> ${phone}</p>
-      <p><strong>Company:</strong> ${company || 'N/A'}</p>
-      ${addressLine}
-      <h3>Requested Items:</h3>
-      <ul>${itemList}</ul>
-    `
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
+    const { type, name, email, phone, company, address, items } = req.body;
+
+    const itemList = items?.map(
+      item => `<li>${item.name} (Qty: ${item.quantity})</li>`
+    ).join("") || "";
+
+    const addressLine = address
+      ? `<p><strong>Address:</strong> ${address}</p>`
+      : "";
+
+    await transporter.sendMail({
+      from: process.env.MAIL_USER,
+      to: process.env.MAIL_USER,
+      subject: `New ${type} Request from ${name}`,
+      html: `
+        <h2>${type} Request</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Company:</strong> ${company || "N/A"}</p>
+        ${addressLine}
+        <h3>Requested Items:</h3>
+        <ul>${itemList}</ul>
+      `,
+    });
+
     res.json({ success: true, message: "Mail sent successfully" });
-  } catch (error) {
-    console.error("❌ Mail error:", error);
+  } catch (err) {
+    console.error("❌ Mail error:", err);
     res.status(500).json({ success: false, message: "Mail sending failed" });
   }
 });
 
-// 📩 Contact Form Submission
+// ==========================
+// Contact Form
+// ==========================
 app.post("/api/contact", async (req, res) => {
-  const { name, email, phone, subject, message } = req.body;
-
-  if (!name || !email || !subject || !message) {
-    return res.status(400).json({ success: false, message: "All required fields must be filled." });
-  }
-
-  const mailOptions = {
-    from: process.env.MAIL_USER,
-    to: process.env.MAIL_USER,
-    subject: `Contact Us Message from ${name}`,
-    html: `
-      <h2>New Contact Message</h2>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
-      <p><strong>Subject:</strong> ${subject}</p>
-      <p><strong>Message:</strong><br>${message}</p>
-    `
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
+    const { name, email, phone, subject, message } = req.body;
+
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "All required fields must be filled.",
+      });
+    }
+
+    await transporter.sendMail({
+      from: process.env.MAIL_USER,
+      to: process.env.MAIL_USER,
+      subject: `Contact Message from ${name}`,
+      html: `
+        <h2>New Contact Message</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone || "N/A"}</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>Message:</strong><br>${message}</p>
+      `,
+    });
+
     res.json({ success: true, message: "Message sent successfully!" });
-  } catch (error) {
-    console.error("❌ Contact mail error:", error);
+  } catch (err) {
+    console.error("❌ Contact error:", err);
     res.status(500).json({ success: false, message: "Message sending failed" });
   }
 });
 
+// ==========================
+// Global Error Handler
+// ==========================
+app.use((err, req, res, next) => {
+  console.error("🔥 Unhandled error:", err);
+  res.status(500).json({ success: false, message: "Server error" });
+});
+
+// ==========================
 // Start Server
+// ==========================
 app.listen(port, () => {
-  console.log(`🚀 Server started at http://localhost:${port}`);
+  console.log(`🚀 Server running on port ${port}`);
 });
