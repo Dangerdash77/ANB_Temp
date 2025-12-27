@@ -20,24 +20,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ✅ CORS setup — allows multiple origins (dev & prod)
 const allowedOrigins = [
-  // process.env.CLIENT_ORIGIN
   "https://www.anbindustries.com",
-  // "http://localhost:5173"
+  "https://anb-frontend.onrender.com",
+  "http://localhost:5173",
+  "https://anb-temp-frontend.onrender.com",
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      console.log("❌ Blocked by CORS:", origin);
+      callback(new Error("CORS blocked"));
     }
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 }));
+
 
 // Mail transport setup (secure with env vars)
 const transporter = nodemailer.createTransport({
