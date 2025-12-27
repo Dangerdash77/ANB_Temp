@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Pages css/ManageProducts.css';
 
-const API = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const API = (import.meta.env.VITE_SERVER_ORIGIN || '').replace(/\/$/, '');
 
 const initialForm = {
   name: '',
