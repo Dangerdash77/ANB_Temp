@@ -392,7 +392,8 @@ const ProductPage = () => {
     const fetchProducts = async () => {
       setLoadingBackend(true);
       try {
-        const res = await fetch(`${import.meta.env.VITE_SERVER_ORIGIN}/api/products/all`);
+        const API_BASE = "https://anb-temp-backend-new.onrender.com";
+        const res = await fetch(`${API_BASE}/api/products/all`);
         const data = await res.json();
         const backendProducts = data.products || [];
         setAllProducts(prev => {
