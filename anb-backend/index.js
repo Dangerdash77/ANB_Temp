@@ -61,12 +61,18 @@ app.use("/api", routes);
 // Mail Transport
 // ==========================
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,          // ✅ important
+  secure: true,       // ✅ TLS
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
   },
+  connectionTimeout: 20_000, // 20s
+  greetingTimeout: 20_000,
+  socketTimeout: 20_000,
 });
+
 
 transporter.verify((error, success) => {
   if (error) {
