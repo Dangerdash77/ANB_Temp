@@ -68,6 +68,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Mail transporter error:", error);
+  } else {
+    console.log("✅ Mail transporter ready");
+  }
+});
+
 // ==========================
 // Quote / Sample / Order
 // ==========================
