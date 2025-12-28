@@ -62,14 +62,17 @@ app.use("/api", routes);
 // ==========================
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // true for 465, false for other ports
+  port: 587,
+  secure: false, // Must be false for port 587
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
   },
-  // Add a timeout setting so it doesn't hang indefinitely
-  connectionTimeout: 10000, // 10 seconds
+  tls: {
+    // This helps if the server has issues verifying the certificate
+    rejectUnauthorized: false 
+  },
+  connectionTimeout: 10000, 
 });
 
 // Verify connection configuration
