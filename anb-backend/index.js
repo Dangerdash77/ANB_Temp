@@ -61,11 +61,24 @@ app.use("/api", routes);
 // Mail Transport (GMAIL ONLY)
 // ==========================
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // true for 465, false for other ports
   auth: {
-    user: process.env.MAIL_USER, // your@gmail.com
-    pass: process.env.MAIL_PASS, // Gmail App Password (16 chars)
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
   },
+  // Add a timeout setting so it doesn't hang indefinitely
+  connectionTimeout: 10000, // 10 seconds
+});
+
+// Verify connection configuration
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log("❌ Mail Server Error:", error);
+  } else {
+    console.log("✅ Mail Server is ready to take our messages");
+  }
 });
 
 // ==========================
