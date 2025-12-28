@@ -33,21 +33,24 @@ const clientOrigins = process.env.CLIENT_ORIGIN
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow server-to-server, Postman, curl
     if (!origin) return callback(null, true);
 
-    if (clientOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+    const allowed = [
+      process.env.CLIENT_ORIGIN,
+      `https://www.${process.env.CLIENT_ORIGIN?.replace(/^https?:\/\//, "")}`
+    ];
 
-    console.warn("❌ CORS blocked origin:", origin);
-    return callback(null, false); // ❗ NEVER throw
+    if (allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.error("❌ CORS blocked:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
   },
   credentials: true,
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 
 // ==========================
 // Routes
