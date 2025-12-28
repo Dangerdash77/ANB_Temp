@@ -87,36 +87,47 @@ transporter.verify((error, success) => {
 // ==========================
 app.post("/api/send-mail", async (req, res) => {
   try {
+    console.log("📨 Incoming mail request:", req.body);
+
     const { type, name, email, phone, company, address, items } = req.body;
 
-    const itemList = items?.map(
-      item => `<li>${item.name} (Qty: ${item.quantity})</li>`
-    ).join("") || "";
+    if (!type || !name || !email || !phone) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+      });
+    }
 
-    const addressLine = address
-      ? `<p><strong>Address:</strong> ${address}</p>`
-      : "";
+    const itemList = Array.isArray(items)
+      ? items.map(i => `<li>${i.name} (Qty: ${i.quantity})</li>`).join("")
+      : "<li>No items provided</li>";
 
     await transporter.sendMail({
-      from: process.env.MAIL_USER,
+      from: `"ANB Industries" <${process.env.MAIL_USER}>`,
       to: process.env.MAIL_USER,
+      replyTo: email,
       subject: `New ${type} Request from ${name}`,
       html: `
         <h2>${type} Request</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Company:</strong> ${company || "N/A"}</p>
-        ${addressLine}
-        <h3>Requested Items:</h3>
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Phone:</b> ${phone}</p>
+        <p><b>Company:</b> ${company || "N/A"}</p>
+        ${address ? `<p><b>Address:</b> ${address}</p>` : ""}
+        <h3>Items</h3>
         <ul>${itemList}</ul>
       `,
     });
 
-    res.json({ success: true, message: "Mail sent successfully" });
+    console.log("✅ Mail sent successfully");
+    res.json({ success: true });
+
   } catch (err) {
-    console.error("❌ Mail error:", err);
-    res.status(500).json({ success: false, message: "Mail sending failed" });
+    console.error("❌ SEND MAIL ERROR:", err);
+    res.status(500).json({
+      success: false,
+      error: err.message,
+    });
   }
 });
 
