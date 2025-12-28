@@ -58,28 +58,14 @@ app.use(cors(corsOptions));
 app.use("/api", routes);
 
 // ==========================
-// Mail Transport
+// Mail Transport (GMAIL ONLY)
 // ==========================
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,          // ✅ important
-  secure: true,       // ✅ TLS
+  service: "gmail",
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
+    user: process.env.MAIL_USER, // your@gmail.com
+    pass: process.env.MAIL_PASS, // Gmail App Password (16 chars)
   },
-  connectionTimeout: 20_000, // 20s
-  greetingTimeout: 20_000,
-  socketTimeout: 20_000,
-});
-
-
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ Mail transporter error:", error);
-  } else {
-    console.log("✅ Mail transporter ready");
-  }
 });
 
 // ==========================
