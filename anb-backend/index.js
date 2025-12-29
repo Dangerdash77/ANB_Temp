@@ -40,14 +40,30 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 }));
 
+app.options("*", cors());
+
 // Mail transport setup (secure with env vars)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // MUST be false for 587
   auth: {
-    user: process.env.MAIL_USER,       // e.g. anbind2020@gmail.com
-    pass: process.env.MAIL_PASS        // app password stored in .env
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS, // Gmail App Password
+  },
+  tls: {
+    rejectUnauthorized: false,
   },
 });
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("❌ Mail transporter error:", error);
+  } else {
+    console.log("✅ Mail transporter ready");
+  }
+});
+
 
 // Routes
 app.use("/api", routes);
