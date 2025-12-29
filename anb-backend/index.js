@@ -48,7 +48,7 @@ app.post("/api/send-mail", async (req, res) => {
     const { type, name, email, phone, company, address, items } = req.body;
 
     await resend.emails.send({
-      from: "ANB Industries <onboarding@resend.dev>",
+      from: "ANB Industries <no-reply@anbindustries.com>",
       to: [process.env.MAIL_TO],
       subject: `New ${type} Request from ${name}`,
       html: `
@@ -65,6 +65,7 @@ app.post("/api/send-mail", async (req, res) => {
         </ul>
       `,
     });
+    console.log("📧 Sending mail to:", process.env.MAIL_TO);
 
     res.json({ success: true, message: "Mail sent successfully" });
   } catch (err) {
@@ -79,7 +80,7 @@ app.post("/api/contact", async (req, res) => {
     const { name, email, phone, subject, message } = req.body;
 
     await resend.emails.send({
-      from: "Website Contact <onboarding@resend.dev>",
+      from: "Website Contact <no-reply@anbindustries.com>",
       to: [process.env.MAIL_TO],
       subject: `Contact: ${subject}`,
       html: `
