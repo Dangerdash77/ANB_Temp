@@ -1,139 +1,108 @@
+require("dotenv").config(); // MUST be first
+
 const express = require("express");
 const cors = require("cors");
-const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
+const { Resend } = require("resend");
 
 const connectToDB = require("./database/connect");
 const routes = require("./routes/routes");
 
-dotenv.config();
-
 const app = express();
-const port = process.env.PORT || 4000;
+const PORT = process.env.PORT || 10000;
 
-// MongoDB Connection
+/* ------------------ DATABASE ------------------ */
 connectToDB(process.env.MONGO_URI);
 
-// Middleware
+/* ------------------ MIDDLEWARE ------------------ */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ✅ CORS setup — allows multiple origins (dev & prod)
-const allowedOrigins = [
-  // process.env.CLIENT_ORIGIN
-  "https://www.anbindustries.com",
-  "http://localhost:5173"
-  // "http://localhost:5173"
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://www.anbindustries.com",
+    ],
+    credentials: true,
+  })
+);
 
 app.options("*", cors());
 
-// Mail transport setup (secure with env vars)
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // MUST be false for 587
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS, // Gmail App Password
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+/* ------------------ RESEND ------------------ */
+if (!process.env.RESEND_API_KEY) {
+  console.error("❌ RESEND_API_KEY missing");
+  process.exit(1);
+}
 
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ Mail transporter error:", error);
-  } else {
-    console.log("✅ Mail transporter ready");
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-
-// Routes
+/* ------------------ ROUTES ------------------ */
 app.use("/api", routes);
 
-// 🚀 Quote / Sample / Order Request
+/* ------------------ SEND MAIL ------------------ */
 app.post("/api/send-mail", async (req, res) => {
-  const { type, name, email, phone, company, address, items } = req.body;
-
-  const itemList = items?.map(item =>
-    `<li>${item.name} (Qty: ${item.quantity})</li>`).join('') || '';
-
-  const addressLine = address ? `<p><strong>Address:</strong> ${address}</p>` : '';
-
-  const mailOptions = {
-    from: process.env.MAIL_USER,
-    to: process.env.MAIL_USER,
-    subject: `New ${type} Request from ${name}`,
-    html: `
-      <h2>${type} Request</h2>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Phone:</strong> ${phone}</p>
-      <p><strong>Company:</strong> ${company || 'N/A'}</p>
-      ${addressLine}
-      <h3>Requested Items:</h3>
-      <ul>${itemList}</ul>
-    `
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
+    const { type, name, email, phone, company, address, items } = req.body;
+
+    await resend.emails.send({
+      from: "ANB Industries <onboarding@resend.dev>",
+      to: [process.env.MAIL_TO],
+      subject: `New ${type} Request from ${name}`,
+      html: `
+        <h2>${type} Request</h2>
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Phone:</b> ${phone}</p>
+        <p><b>Company:</b> ${company || "N/A"}</p>
+        <p><b>Address:</b> ${address || "N/A"}</p>
+        <ul>
+          ${(items || []).map(
+            (i) => `<li>${i.name} (Qty: ${i.quantity})</li>`
+          ).join("")}
+        </ul>
+      `,
+    });
+
     res.json({ success: true, message: "Mail sent successfully" });
-  } catch (error) {
-    console.error("❌ Mail error:", error);
-    res.status(500).json({ success: false, message: "Mail sending failed" });
+  } catch (err) {
+    console.error("❌ Mail error:", err);
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// 📩 Contact Form Submission
+/* ------------------ CONTACT FORM ------------------ */
 app.post("/api/contact", async (req, res) => {
-  const { name, email, phone, subject, message } = req.body;
-
-  if (!name || !email || !subject || !message) {
-    return res.status(400).json({ success: false, message: "All required fields must be filled." });
-  }
-
-  const mailOptions = {
-    from: process.env.MAIL_USER,
-    to: process.env.MAIL_USER,
-    subject: `Contact Us Message from ${name}`,
-    html: `
-      <h2>New Contact Message</h2>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
-      <p><strong>Subject:</strong> ${subject}</p>
-      <p><strong>Message:</strong><br>${message}</p>
-    `
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
-    res.json({ success: true, message: "Message sent successfully!" });
-  } catch (error) {
-    console.error("❌ Contact mail error:", error);
-    res.status(500).json({ success: false, message: "Message sending failed" });
+    const { name, email, phone, subject, message } = req.body;
+
+    await resend.emails.send({
+      from: "Website Contact <onboarding@resend.dev>",
+      to: [process.env.MAIL_TO],
+      subject: `Contact: ${subject}`,
+      html: `
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Phone:</b> ${phone}</p>
+        <p><b>Message:</b><br/>${message}</p>
+      `,
+    });
+
+    res.json({ success: true, message: "Message sent" });
+  } catch (err) {
+    console.error("❌ Contact mail error:", err);
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// Start Server
-app.listen(port, () => {
-  console.log(`🚀 Server started at http://localhost:${port}`);
+/* ------------------ HEALTH CHECK ------------------ */
+app.get("/", (req, res) => {
+  res.send("ANB Backend Running ✅");
+});
+
+/* ------------------ START SERVER ------------------ */
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
