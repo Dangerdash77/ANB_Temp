@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Components css/Header.css';
-import logo from '../assets/logo.png';
+import logo from '../assets/ANB_Logo.svg';
 
 const Header = ({ isLoggedIn, role, onLogout }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,39 +27,47 @@ const Header = ({ isLoggedIn, role, onLogout }) => {
 
   return (
     <header className="header">
-      <div className="logo">
-        <img src={logo} alt="ANB Industries" />
-      </div>
+      <div className="header-container">
 
-      {isMobile && (
-        <div className={`hamburger ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-          <div></div>
-          <div></div>
-          <div></div>
+        <div className="logo">
+          <img src={logo} alt="ANB Industries" />
         </div>
-      )}
 
-      {(menuOpen || !isMobile) && (
-        <nav className={`nav-links ${menuOpen ? 'show' : ''}`}>
-          {!isLoggedIn ? (
-            <>
-              <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
-              <NavLink to="/about-us" onClick={() => setMenuOpen(false)}>About Us</NavLink>
-              <NavLink to="/products" onClick={() => setMenuOpen(false)}>Products</NavLink>
-              <NavLink to="/contact-us" onClick={() => setMenuOpen(false)}>Contact Us</NavLink>
-            </>
-          ) : (
-            <>
-              <NavLink to="/company" onClick={() => setMenuOpen(false)}>Company</NavLink>
-              <NavLink to="/profile" onClick={() => setMenuOpen(false)}>Profile</NavLink>
-              {role === 'owner' && (
-                <NavLink to="/manage-products" onClick={() => setMenuOpen(false)}>Manage Products</NavLink>
-              )}
-              <button onClick={handleLogoutClick} className="logout-btn">Logout</button>
-            </>
-          )}
-        </nav>
-      )}
+        {isMobile && (
+          <div className={`hamburger ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        )}
+
+        {(menuOpen || !isMobile) && (
+          <nav className={`nav-links ${menuOpen ? 'show' : ''}`}>
+            {!isLoggedIn ? (
+              <>
+                <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
+                <NavLink to="/about-us" onClick={() => setMenuOpen(false)}>About Us</NavLink>
+                <NavLink to="/products" onClick={() => setMenuOpen(false)}>Products</NavLink>
+                <NavLink to="/contact-us" onClick={() => setMenuOpen(false)}>Contact Us</NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink to="/company" onClick={() => setMenuOpen(false)}>Company</NavLink>
+                <NavLink to="/profile" onClick={() => setMenuOpen(false)}>Profile</NavLink>
+                {role === 'owner' && (
+                  <NavLink to="/manage-products" onClick={() => setMenuOpen(false)}>
+                    Manage Products
+                  </NavLink>
+                )}
+                <button onClick={handleLogoutClick} className="logout-btn">
+                  Logout
+                </button>
+              </>
+            )}
+          </nav>
+        )}
+
+      </div>
     </header>
   );
 };

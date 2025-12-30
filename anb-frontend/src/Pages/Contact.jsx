@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import './Pages css/Contact.css';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
-    subject: '',
     message: '',
   });
 
@@ -32,14 +31,19 @@ const Contact = () => {
       const result = await res.json();
 
       if (result.success) {
-        alert("✅ Your message has been sent successfully!");
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        alert('✅ Your message has been sent successfully!');
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          message: '',
+        });
       } else {
-        alert("❌ Failed to send message.");
+        alert('❌ Failed to send message.');
       }
-    } catch (err) {
-      console.error("Error while sending message:", err);
-      alert("🚫 Server error. Please try again later.");
+    } catch {
+      alert('🚫 Server error. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -47,60 +51,82 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-      <h1>Contact Us</h1>
 
-      <div className="contact-container">
-        {/* Left - Contact Form */}
-        <div className="contact-form">
-          <form onSubmit={handleSubmit}>
-            <label>Name:
-              <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-            </label>
-            <label>Email:
-              <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-            </label>
-            <label>Mobile:
-              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
-            </label>
-            <label>Subject:
-              <input type="text" name="subject" value={formData.subject} onChange={handleChange} required />
-            </label>
-            <label>Message:
-              <textarea name="message" rows="5" value={formData.message} onChange={handleChange} required />
-            </label>
-            <button type="submit" disabled={loading}>
-              {loading ? "Sending..." : "Contact"}
-            </button>
-          </form>
-        </div>
+      <h1 className="contact-title">
+        CONTACT US
+        <span className="title-underline" />
+      </h1>
 
-        {/* Right - Contact Info */}
-        <div className="contact-info">
-          <div className="info-box">
-            <FaEnvelope className="icon" />
-            <div>
-              <h3>Email</h3>
-              <p>anbind2020@gmail.com</p>
-            </div>
+      <form className="contact-form" onSubmit={handleSubmit}>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label>First Name</label>
+            <input
+              type="text"
+              name="firstName"
+              placeholder="Enter your first name"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+            />
           </div>
 
-          <div className="info-box">
-            <FaPhone className="icon" />
-            <div>
-              <h3>Phone</h3>
-              <p>+91 84606 03033</p>
-            </div>
-          </div>
-
-          <div className="info-box">
-            <FaMapMarkerAlt className="icon" />
-            <div>
-              <h3>Address</h3>
-              <p>Shapar-Veraval,<br />Rajkot, Gujarat, India</p>
-            </div>
+          <div className="form-group">
+            <label>Last Name</label>
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Enter your last name"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+            />
           </div>
         </div>
-      </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Phone number</label>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Enter your phone number"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="form-group full">
+          <label>Message</label>
+          <textarea
+            name="message"
+            placeholder="Type your message..."
+            value={formData.message}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <button type="submit" disabled={loading}>
+          {loading ? 'Sending...' : 'Submit'}
+        </button>
+
+      </form>
     </div>
   );
 };

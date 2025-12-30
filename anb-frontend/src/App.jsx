@@ -7,7 +7,6 @@ import Footer from './Components/Footer';
 
 import Products from './Pages/Products';
 import Home from './Pages/Home';
-import Career from './Pages/Career';
 import Login from './Pages/Login';
 import RoleEditor from './Pages/RoleEditor';
 import Signup from './Pages/Signup';
@@ -20,7 +19,6 @@ import ForgotPassword from './Pages/ForgotPassword';
 import ResetPassword from './Pages/ResetPassword';
 import Profile from './Pages/Profile';
 import ManageProducts from './Pages/ManageProducts';
-import CareerRequests from './Pages/CareerRequests';
 import ContactRequests from './Pages/ContactRequests';
 
 import './App.css';
@@ -57,7 +55,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/careers" element={<Career />} />
         <Route path="/contact-us" element={<Contact />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setRole={setRole} />} />
@@ -69,7 +66,6 @@ function App() {
         <Route path="/printbill" element={<PrivateRoute allowedRoles={['user', 'owner', 'manager', 'employee']} element={<PrintBill />} />} />
         <Route path="/profile" element={<PrivateRoute allowedRoles={['user', 'owner', 'manager', 'employee']} element={<Profile />} />} />
         <Route path="/manage-products" element={<PrivateRoute allowedRoles={['owner']} element={<ManageProducts />} />} />
-        <Route path="/view-careers" element={<PrivateRoute allowedRoles={['owner']} element={<CareerRequests />} />} />
         <Route path="/view-contacts" element={<PrivateRoute allowedRoles={['owner']} element={<ContactRequests />} />} />
       </Routes>
       <Footer />
