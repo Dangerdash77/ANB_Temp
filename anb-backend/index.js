@@ -77,14 +77,13 @@ app.post("/api/send-mail", async (req, res) => {
 /* ------------------ CONTACT FORM ------------------ */
 app.post("/api/contact", async (req, res) => {
   try {
-    const { name, email, phone, subject, message } = req.body;
+    const { firstName,lastName, email, phone, message } = req.body;
 
     await resend.emails.send({
       from: "Website Contact <no-reply@anbindustries.com>",
       to: [process.env.MAIL_TO],
-      subject: `Contact: ${subject}`,
+      subject:`Contact Form Submission from ${firstName} ${lastName}`,
       html: `
-        <p><b>Name:</b> ${name}</p>
         <p><b>Email:</b> ${email}</p>
         <p><b>Phone:</b> ${phone}</p>
         <p><b>Message:</b><br/>${message}</p>
