@@ -2,31 +2,64 @@ import React, { useState, useRef, useEffect } from "react";
 import "./Pages css/Products.css";
 import cartIcon from "../assets/cart.png";
 
-import img1 from '../assets/product_img/Plastic Endless chain.png';
-import img2 from '../assets/product_img/Plastic Operation Chain W.jpg';
-import img3 from '../assets/product_img/Plastic Operation Chain Brown.jpg';
-import img4 from '../assets/product_img/Plastic Operation Chain S.jpg';
-import img5 from '../assets/product_img/Plastic Operation Chain B.jpg';
-import img6 from '../assets/product_img/6 Gear Control.png';
-import img7 from '../assets/product_img/Zebra Metal.png';
-import img8 from '../assets/product_img/Zebra Plastic.png';
-// import img9 from '../assets/product_img/Heavy Cord Weight Plain.png';
-import img10 from '../assets/product_img/Heavy Cord Weight Printed.png';
-import img11 from '../assets/product_img/Oval Cord Weight Plain.png';
-// import img12 from '../assets/product_img/Oval Cord Weight Printed.png';
-import img13 from '../assets/product_img/Arabian Mindi Runner.png';
-import img14 from '../assets/product_img/Arabian Trishul Runner.png';
-// import img15 from '../assets/product_img/M Runner Ripple.png';
-import img16 from '../assets/product_img/M Runner.png';
-import img17 from '../assets/product_img/Roman Control Set.png';
-import img18 from '../assets/product_img/Bottom Chain.png';
-// import img19 from '../assets/product_img/Plastic Held.png';
-// import img20 from '../assets/product_img/Plastic Lotion Pump.png';
-// import img21 from '../assets/product_img/Soap Dispenser Pump.png';
-import img22 from '../assets/product_img/Chain Stopper Button.png';
-import img23 from '../assets/product_img/Chain Stopper Button Trans.png';
-import img24 from '../assets/product_img/Chain Stopper Ball.png';
-import img25 from '../assets/product_img/Chain Jointer.png';
+// import img1 from '../assets/product_img/Plastic Endless chain.png';
+// import img2 from '../assets/product_img/Plastic Operation Chain W.jpg';
+// import img3 from '../assets/product_img/Plastic Operation Chain Brown.jpg';
+// import img4 from '../assets/product_img/Plastic Operation Chain S.jpg';
+// import img5 from '../assets/product_img/Plastic Operation Chain B.jpg';
+// import img6 from '../assets/product_img/6 Gear Control.png';
+// import img7 from '../assets/product_img/Zebra Metal.png';
+// import img8 from '../assets/product_img/Zebra Plastic.png';
+// // import img9 from '../assets/product_img/Heavy Cord Weight Plain.png';
+// import img10 from '../assets/product_img/Heavy Cord Weight Printed.png';
+// import img11 from '../assets/product_img/Oval Cord Weight Plain.png';
+// // import img12 from '../assets/product_img/Oval Cord Weight Printed.png';
+// import img13 from '../assets/product_img/Arabian Mindi Runner.png';
+// import img14 from '../assets/product_img/Arabian Trishul Runner.png';
+// // import img15 from '../assets/product_img/M Runner Ripple.png';
+// import img16 from '../assets/product_img/M Runner.png';
+// import img17 from '../assets/product_img/Roman Control Set.png';
+// import img18 from '../assets/product_img/Bottom Chain.png';
+// // import img19 from '../assets/product_img/Plastic Held.png';
+// // import img20 from '../assets/product_img/Plastic Lotion Pump.png';
+// // import img21 from '../assets/product_img/Soap Dispenser Pump.png';
+// import img22 from '../assets/product_img/Chain Stopper Button.png';
+// import img23 from '../assets/product_img/Chain Stopper Button Trans.png';
+// import img24 from '../assets/product_img/Chain Stopper Ball.png';
+// import img25 from '../assets/product_img/Chain Jointer.png';
+
+
+
+import img1 from '../assets/product/Plastic Endless Chain.svg';
+import img2 from '../assets/product/Plastic Operation Chain W.svg';
+import img3 from '../assets/product/Plastic Operation Chain B.svg';
+import img4 from '../assets/product/Plastic Operation Chain G.svg';
+import img5 from '../assets/product/Plastic Operation Chain Black.svg';
+import img6 from '../assets/product/6 Gear Control Unit.svg';
+import img7 from '../assets/product/Zebra Metal.svg';
+import img8 from '../assets/product/Zebra Plastic.svg';
+// import img9 from '../assets/product/Heavy Cord Weight Plain.png';
+import img10 from '../assets/product/Heavy Cord Weight Printed.svg';
+import img11 from '../assets/product/Oval Cord Weight Plain.svg';
+// import img12 from '../assets/product/Oval Cord Weight Printed.png';
+import img13 from '../assets/product/Arabian Mindi Runner.svg';
+import img14 from '../assets/product/Arabian Trishul Runner.svg';
+// import img15 from '../assets/product/M Runner Ripple.png';
+import img16 from '../assets/product/M Runner.svg';
+import img17 from '../assets/product/Roman Control Set.svg';
+import img18 from '../assets/product/Bottom Chain.svg';
+// import img19 from '../assets/product/Plastic Held.png';
+// import img20 from '../assets/product/Plastic Lotion Pump.png';
+// import img21 from '../assets/product/Soap Dispenser Pump.png';
+import img22 from '../assets/product/Chain Stopper Button 1.svg';
+import img23 from '../assets/product/Chain Stopper Button 2.svg';
+import img24 from '../assets/product/Chain Stopper Ball.svg';
+import img25 from '../assets/product/Chain Jointer.svg';
+
+import addIcon from "../assets/Add to Cart.svg";
+import removeIcon from "../assets/Remove from Cart.svg";
+import addHoverIcon from "../assets/Add to Cart Hovered.svg";
+import removeHoverIcon from "../assets/Remove from Cart Hovered.svg";
 
 const localProducts = [
   {
@@ -293,12 +326,12 @@ const ProductPage = () => {
       isInCart(product._id)
         ? prev.filter((p) => p._id !== product._id)
         : [
-            ...prev,
-            {
-              ...product,
-              quantity: parseInt((product.minQty || "1").replace(/\D/g, "")) || 1,
-            },
-          ]
+          ...prev,
+          {
+            ...product,
+            quantity: parseInt((product.minQty || "1").replace(/\D/g, "")) || 1,
+          },
+        ]
     );
   };
 
@@ -310,9 +343,9 @@ const ProductPage = () => {
       prev.map((item) =>
         item._id === id
           ? {
-              ...item,
-              quantity: Math.max(Number(val), Number(item.minQty || 1)),
-            }
+            ...item,
+            quantity: Math.max(Number(val), Number(item.minQty || 1)),
+          }
           : item
       )
     );
@@ -412,6 +445,8 @@ const ProductPage = () => {
     fetchProducts();
   }, []);
 
+  const [hovered, setHovered] = useState(null);
+
   return (
     <div className="product-page">
       <div className="cart-button" onClick={scrollToCart}>
@@ -419,7 +454,9 @@ const ProductPage = () => {
         <span className="cart-count">{cart.length}</span>
       </div>
 
-      <h2 className="section-title">🛒 Products</h2>
+      <h2 className="section-title">PRODUCTS</h2>
+      <p>At ANB Industries, we offer a wide range of high-quality curtain roller chains and components,
+        serving industries across India and beyond with innovation, reliability, and precision.</p>
       <div className="product-grid">
         {allProducts.map((p) => (
           <div key={p._id} className="product-vertical-card">
@@ -433,9 +470,26 @@ const ProductPage = () => {
                   </p>
                 ) : null
               )}
-              <button onClick={() => toggleCart(p)} className="add-cart">
-                {isInCart(p._id) ? "−" : "+"}
+              <button
+                className="add-cart"
+                onClick={() => toggleCart(p)}
+                onMouseEnter={() => setHovered(p._id)}
+                onMouseLeave={() => setHovered(null)}
+              >
+                <img
+                  src={
+                    isInCart(p._id)
+                      ? hovered === p._id
+                        ? removeHoverIcon
+                        : removeIcon
+                      : hovered === p._id
+                        ? addHoverIcon
+                        : addIcon
+                  }
+                  alt="Add to cart"
+                />
               </button>
+
             </div>
           </div>
         ))}

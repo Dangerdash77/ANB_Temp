@@ -41,3 +41,48 @@ a {
     padding: 1rem;
   }
 }
+
+/* ===== WhatsApp Floating Button ===== */
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 15px;
+
+  width: 60px;
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: transparent;
+
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.whatsapp-icon {
+  width: 60px;
+  height: 60px;
+  transition: transform 0.25s ease;
+}
+
+/* 🔥 Image swap on hover */
+.whatsapp-float:hover .whatsapp-icon {
+  content: attr(data-hover);
+  transform: scale(1.1);
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .whatsapp-float {
+    bottom: 18px;
+    right: 18px;
+  }
+
+  .whatsapp-icon {
+    width: 52px;
+    height: 52px;
+  }
+}

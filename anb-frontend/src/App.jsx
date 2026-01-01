@@ -21,6 +21,9 @@ import Profile from './Pages/Profile';
 import ManageProducts from './Pages/ManageProducts';
 import ContactRequests from './Pages/ContactRequests';
 
+import whatsappIcon from './assets/Whatsapp.svg';
+import whatsappHoverIcon from './assets/Whatsapp Hovered.svg';
+
 import './App.css';
 
 const PrivateRoute = ({ element, allowedRoles }) => {
@@ -68,12 +71,25 @@ function App() {
         <Route path="/manage-products" element={<PrivateRoute allowedRoles={['owner']} element={<ManageProducts />} />} />
         <Route path="/view-contacts" element={<PrivateRoute allowedRoles={['owner']} element={<ContactRequests />} />} />
       </Routes>
+
+      <a
+        href="https://wa.me/918460603033"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="whatsapp-float"
+      >
+        <img
+          src={whatsappIcon}
+          alt="WhatsApp"
+          className="whatsapp-icon"
+          data-hover={whatsappHoverIcon}
+          data-normal={whatsappIcon}
+        />
+      </a>
+
       <Footer />
     </Router>
   );
 }
 
 export default App;
-
-
-//hdtrrx
