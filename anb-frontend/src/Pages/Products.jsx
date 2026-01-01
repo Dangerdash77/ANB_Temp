@@ -46,7 +46,7 @@ import img13 from '../assets/product/Arabian Mindi Runner.svg';
 import img14 from '../assets/product/Arabian Trishul Runner.svg';
 // import img15 from '../assets/product/M Runner Ripple.png';
 import img16 from '../assets/product/M Runner.svg';
-import img17 from '../assets/product/Roman Control Set.svg';
+import img17 from '../assets/product_img/Roman Control Set.png';
 import img18 from '../assets/product/Bottom Chain.svg';
 // import img19 from '../assets/product/Plastic Held.png';
 // import img20 from '../assets/product/Plastic Lotion Pump.png';
