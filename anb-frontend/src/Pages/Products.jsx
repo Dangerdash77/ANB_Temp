@@ -37,7 +37,7 @@ import img4 from '../assets/product/Plastic Operation Chain G.svg';
 import img5 from '../assets/product/Plastic Operation Chain Black.svg';
 import img6 from '../assets/product/6 Gear Control Unit.svg';
 import img7 from '../assets/product/Zebra Metal.svg';
-import img8 from '../assets/product/Zebra Plastic.svg';
+import img8 from '../assets/product/Zebra_Plastic.svg';
 // import img9 from '../assets/product/Heavy Cord Weight Plain.png';
 import img10 from '../assets/product/Heavy Cord Weight Printed.svg';
 import img11 from '../assets/product/Oval Cord Weight Plain.svg';
