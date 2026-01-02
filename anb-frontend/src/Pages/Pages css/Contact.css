@@ -1,6 +1,6 @@
 /* ===== PAGE ===== */
 .contact-page {
-  padding: 1px ;
+  padding: 1px;
   padding-bottom: 25px;
   background: #ffffff;
   font-family: 'Poppins', sans-serif;
@@ -12,7 +12,7 @@
   font-size: clamp(28px, 3vw, 36px);
   font-weight: 700;
   color: #00248F;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   position: relative;
 }
 
@@ -30,17 +30,18 @@
 .contact-form {
   max-width: 1024px;
   margin: 0 auto;
-
   display: flex;
   flex-direction: column;
-  gap: 30px; /* vertical spacing like Figma */
+  gap: 30px;
+  /* vertical spacing like Figma */
 }
 
 /* ===== ROW ===== */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px; /* horizontal spacing */
+  gap: 32px;
+  /* horizontal spacing */
 }
 
 /* ===== GROUP ===== */
@@ -101,13 +102,46 @@
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
+@media (max-width: 1064px) {
+  .contact-form {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+@media (max-width: 700px) {
+  .contact-form {
+    margin-left: 30px;
+    margin-right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* vertical spacing like Figma */
+  }
+
   .form-row {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 10px;
   }
 
   .contact-title {
-    margin-bottom: 40px;
+    font-size: clamp(23px, 3vw, 36px);
+  }
+
+  .form-group label {
+    font-size: 16px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    font-size: 12px;
+    height: 38px;
+  }
+
+  .form-group textarea {
+    height: 60px;
+  }
+
+  .contact-form button {
+    font-size: 15px;
   }
 }

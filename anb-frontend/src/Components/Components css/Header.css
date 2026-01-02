@@ -35,7 +35,7 @@
 
 /* ===== LOGO (DRIVES HEADER HEIGHT NATURALLY) ===== */
 .logo img {
-  height: clamp(38px, 4.2vw, 70px);
+  height: clamp(38px, 3.5vw, 70px);
   width: auto;
   object-fit: contain;
 }
@@ -50,7 +50,7 @@
 
 .nav-links a {
   text-decoration: none;
-  font-size: clamp(14px, 3vw, 32px);
+  font-size: clamp(14px, 2vw, 28px);
   font-weight: 700;
   color: #00248F;
   transition: color 0.25s ease;

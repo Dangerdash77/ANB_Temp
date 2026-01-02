@@ -1,6 +1,7 @@
 /* ===== FOOTER BASE ===== */
 .footer-section {
-  background-color: #00248F; /* Figma blue */
+  background-color: #00248F;
+  /* Figma blue */
   color: #ffffff;
 }
 
@@ -30,13 +31,10 @@
 
 /* ===== LOGO ===== */
 .footer-logo {
-  /* height: 86px;          smaller height */
   object-fit: contain;
-  /* object-position: top; pushes logo upward */
   display: block;
   height: clamp(86px, 6vw, 130px);
   width: auto;
-  /* margin-bottom: 16px; */
 }
 
 /* ===== HEADINGS ===== */
@@ -49,14 +47,13 @@
 .footer-column h4 {
   font-size: clamp(16px, 1.4vw, 20px);
   margin-bottom: 12px;
-  color: #F5842A; /* Figma orange */
+  color: #F5842A;
 }
 
 /* ===== TEXT ===== */
 .footer-column p {
   font-size: clamp(14px, 1.05vw, 16px);
   line-height: 1.6;
-  /* margin-bottom: 8px; */
   color: #ffffff;
 }
 
@@ -85,7 +82,6 @@
 .social-icons {
   display: flex;
   gap: clamp(14px, 2vw, 24px);
-  /* margin-top: 16px; */
 }
 
 .social-icons a {
@@ -110,12 +106,18 @@
 /* ===== TABLET ===== */
 @media (max-width: 1024px) {
   .footer-container {
-    gap: clamp(24px, 5vw, 100px);
+    gap: clamp(24px, 3vw, 80px);
+    /* gap: 32px */
+  }
+
+  .footer-column {
+    flex: 1 1 120px;
+    min-width: 100px;
   }
 }
 
 /* ===== MOBILE ===== */
-@media (max-width: 768px) {
+@media (max-width: 670px) {
   .footer-container {
     flex-direction: column;
     align-items: flex-start;

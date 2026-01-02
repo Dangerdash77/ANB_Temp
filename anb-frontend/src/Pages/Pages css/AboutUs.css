@@ -22,20 +22,18 @@
 .about-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    #00248f 0%,
-    rgba(0, 36, 143, 0.90) 35%,
-    rgba(0, 36, 143, 0.85) 40%,
-    rgba(0, 36, 143, 0.80) 45%,
-    rgba(0, 36, 143, 0.65) 50%,
-    rgba(0, 36, 143, 0.55) 55%,
-    rgba(0, 36, 143, 0.45) 60%,
-    rgba(0, 36, 143, 0.3) 65%,
-    rgba(0, 36, 143, 0.2) 70%,
-    rgba(0, 36, 143, 0.1) 75%,
-    rgba(0, 36, 143, 0.0) 80%
-  );
+  background: linear-gradient(90deg,
+      #00248f 0%,
+      rgba(0, 36, 143, 0.90) 35%,
+      rgba(0, 36, 143, 0.85) 40%,
+      rgba(0, 36, 143, 0.80) 45%,
+      rgba(0, 36, 143, 0.65) 50%,
+      rgba(0, 36, 143, 0.55) 55%,
+      rgba(0, 36, 143, 0.45) 60%,
+      rgba(0, 36, 143, 0.3) 65%,
+      rgba(0, 36, 143, 0.2) 70%,
+      rgba(0, 36, 143, 0.1) 75%,
+      rgba(0, 36, 143, 0.0) 80%);
 }
 
 .about-hero-content {
@@ -57,10 +55,109 @@
   font-weight: 700;
 }
 
+@media (max-width: 1200px) {
+  .about-hero {
+    height: 600px;
+  }
+
+  .about-hero-content {
+    width: clamp(280px, 40%, 700px);
+    padding: 60px;
+    padding-top: 30px;
+  }
+
+  .about-hero p {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .about-hero {
+    height: 500px;
+  }
+
+  .about-hero-content {
+    width: clamp(260px, 45%, 650px);
+    padding: 40px;
+    padding-top: 5px;
+  }
+
+  .about-hero p {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 850px) {
+  .about-hero {
+    height: 450px;
+  }
+
+  .about-hero-content {
+    width: clamp(250px, 50%, 600px);
+    padding: 40px;
+    padding-top: 20px;
+  }
+
+  .about-hero p {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-hero {
+    height: 300px;
+  }
+
+  .about-hero-content {
+    width: clamp(220px, 50%, 550px);
+    padding: 10px;
+    padding-top: 0px;
+  }
+
+  .about-hero p {
+    font-size: clamp(13px, 2vw, 16px);
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 483px) {
+  .about-hero {
+    height: clamp(200px, 40%, 300px);
+  }
+
+  .about-hero-content {
+    width: clamp(200px, 40%, 400px);
+  }
+
+  .about-hero p {
+    font-size: clamp(10px, 2vw, 13px);
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 330px) {
+  .about-hero {
+    height: clamp(100px, 40%, 150px);
+  }
+
+  .about-hero-content {
+    width: clamp(180px, 40%, 350px);
+    padding: 5px;
+  }
+
+  .about-hero p {
+    font-size: clamp(9px, 2vw, 11px);
+  }
+}
+
 /* ================= BLUE PANELS ================= */
 .blue-panel {
-  max-width: 1200px;
-  margin: 60px auto;
+  /* max-width: 1200px; */
+  justify-self: stretch;
+  margin-top: 40px;
+  /* margin: 30px auto; */
+  margin-right: 30px;
+  margin-left: 30px;
   background: #00248f;
   color: #fff;
   border-radius: 60px;
@@ -80,15 +177,19 @@
 
 .blue-panel p,
 .blue-panel li {
-  font-size: clamp(20px,1vw,25px);   /* 🔥 CHANGE CONTENT SIZE HERE */
+  font-size: clamp(20px, 1vw, 25px);
+  /* 🔥 CHANGE CONTENT SIZE HERE */
   line-height: 1.5;
 }
 
 .panel-underline {
   display: block;
-  width: 130px;          /* 🔥 line width */
-  height: 4px;          /* 🔥 line thickness */
-  background: #f5842a;  /* 🔥 orange color */
+  width: 130px;
+  /* 🔥 line width */
+  height: 4px;
+  /* 🔥 line thickness */
+  background: #f5842a;
+  /* 🔥 orange color */
   margin: 10px auto 0;
   border-radius: 2px;
 }
@@ -130,7 +231,8 @@
 .what-card {
   background: #fff;
   border-radius: 18px;
-  overflow: hidden; /* 🔥 REQUIRED for rounded image */
+  overflow: hidden;
+  /* 🔥 REQUIRED for rounded image */
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   padding: 0;
   transition: transform 0.3s ease;
@@ -143,7 +245,8 @@
 
 /* IMAGE */
 .what-img {
-  height: clamp(100px,2vm,220px);          /* 🔥 image height */
+  height: clamp(100px, 2vm, 220px);
+  /* 🔥 image height */
   background: #eee;
 }
 
@@ -179,11 +282,55 @@
 
 .what-grid {
   display: grid;
+  margin-left: 20px;
+  margin-right: 20px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 32px;
   align-items: stretch;
 }
-
+@media (max-width: 1200px) {
+  .what-content h3 {
+    font-size: 20px;
+  }
+  .what-content p{
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .what-grid {
+    gap: 24px;
+  }
+}
+@media (max-width: 900px) {
+  .about-section p{
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 0px;
+    font-size: 18px;
+  }
+  .what-content h3 {
+    font-size: 20px;
+  }
+  .what-content p{
+    font-size: 10px;
+    line-height: 1.3;
+  }
+  .what-grid {
+    gap: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .what-content h3 {
+    font-size: 24px;
+  }
+  .what-content p{
+    font-size: 18px;
+    line-height: 1.2;
+  }
+  .what-grid {
+    /* gap: 16px; */
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
 /* ================= USAGE ================= */
 .usage-box {
   margin-top: 60px;
@@ -204,7 +351,6 @@
 .check-list li {
   margin-bottom: 14px;
   position: relative;
-  padding-left: 28px;
 }
 
 .check-list li::before {
@@ -213,6 +359,35 @@
   right: 10px;
   color: #f5842a;
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 26px;
+  }
+
+  .blue-panel p,
+  .blue-panel li {
+    font-size: clamp(15px, 1vw, 20px);
+    /* 🔥 CHANGE CONTENT SIZE HERE */
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .blue-panel {
+    margin-right: 15px;
+    margin-left: 15px;
+    padding: 10px;
+  }
+
+  .blue-panel ul {
+    padding-left: 15px;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
 }
 
 /* ================= VALUES (PIXEL MATCH) ================= */
@@ -232,6 +407,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 /* TITLE */
@@ -286,23 +463,16 @@
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 900px) {
-  .about-hero-content {
-    padding: 40px;
-  }
-
-  .what-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 32px;
-}
-
   .values-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-
-  .blue-panel {
-    border-radius: 32px;
-    padding: 30px;
+}
+@media (max-width: 768px) {
+  .value-card li{
+    font-size: 15px;
+  }
+  .value-card h3 {
+    font-size: 22px;
   }
 }
